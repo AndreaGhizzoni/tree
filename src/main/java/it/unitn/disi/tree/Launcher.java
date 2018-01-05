@@ -45,10 +45,19 @@ public class Launcher {
     public static void main(String...args){
 //        Node tree = buildDEMOTree( 3 );
         Node tree = buildTreeManual();
-        Util.printTree(tree);
 
-        Object toSearch = 1;
+        System.out.println("Custom print =============");
+        Util.printTree(tree);
+        System.out.println("==========================\n");
+
+        System.out.println("Searching Data ===========");
+        Object toSearch = 42;
         boolean found = Util.searchForData(tree, toSearch);
-        System.out.printf("data %s is save on the tree ? %b", toSearch, found);
+        System.out.printf("data %s is save on the tree ? %b\n", toSearch, found);
+        System.out.println("==========================\n");
+
+        System.out.println("DOT print ================");
+        System.out.println( Util.printTreeInDOT("Tree", tree) );
+        System.out.println("==========================\n");
     }
 }

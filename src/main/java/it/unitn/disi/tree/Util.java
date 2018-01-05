@@ -16,7 +16,24 @@ public class Util {
         n.getChildren().forEach(node -> pT(node, finalDeep));
     }
 
-    public static boolean searchForData(Node tree, Object data){
+    public static String printTreeInDOT( String name, Node tree ){
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("digraph ").append(name).append(" {\n");
+        pT_DOT( buffer, tree );
+        buffer.append("}");
+        return buffer.toString();
+    }
+
+    private static void pT_DOT( StringBuffer buf, Node n ){
+        n.getChildren().forEach( child -> {
+            buf.append("\t\"").append(n.getName()).append("\"");
+            buf.append(" -> ");
+            buf.append("\"").append(child.getName()).append("\"\n");
+            pT_DOT( buf, child );
+        });
+    }
+
+    public static boolean searchForData( Node tree, Object data ){
         if( tree.getData().equals(data) ) {
             return true;
         }else {
