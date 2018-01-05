@@ -1,21 +1,33 @@
 package it.unitn.disi.tree;
 
+import java.io.IOException;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.FileAttribute;
+import java.util.Random;
 import java.util.UUID;
 
 public class Launcher {
+    private static Random gen = new Random( System.currentTimeMillis() );
+    private static int r( int max ){
+        return gen.nextInt(max);
+    }
+
     public static Node buildDEMOTree(int height){
         return bT( height-1, 0 );
     }
 
     private static Node bT( int maxHeight, int currentDeep ){
         Node localRoot = new Node();
+        localRoot.setName( Integer.toString(r(5000)) );
         localRoot.setData( UUID.randomUUID().toString() );
         localRoot.setProperties(Node.LEVEL, currentDeep);
 
         if( currentDeep == maxHeight ) return localRoot;
 
         int finalCurrentDeep = currentDeep+1;
-        for( int i=0; i<3; i++ )
+        for( int i=0; i<r(10); i++ )
             localRoot.addChild( bT(maxHeight, finalCurrentDeep) );
         return localRoot;
     }
@@ -43,8 +55,8 @@ public class Launcher {
     }
 
     public static void main(String...args){
-//        Node tree = buildDEMOTree( 3 );
-        Node tree = buildTreeManual();
+        Node tree = buildDEMOTree( r(10)+1 );
+//        Node tree = buildTreeManual();
 
         System.out.println("Custom print =============");
         Util.printTree(tree);
@@ -57,7 +69,19 @@ public class Launcher {
         System.out.println("==========================\n");
 
         System.out.println("DOT print ================");
-        System.out.println( Util.printTreeInDOT("Tree", tree) );
+        String dotGraphviz = Util.printTreeInDOT("Tree", tree);
+        System.out.println( dotGraphviz );
+        try {
+            // to generate a nice jpg of the tree use:
+            // dot -Tjpg tree.dot -o tree.dot
+            Files.write(
+                new File("tree.dot").toPath(),
+                dotGraphviz.getBytes(),
+                StandardOpenOption.CREATE_NEW
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println("==========================\n");
     }
 }
